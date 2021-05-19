@@ -21,6 +21,23 @@ colnames(df_concat)[1] = 'MIND.ID.Updated'
 
 df_concat = merge(demo_df, df_concat, by='MIND.ID.Updated')
 
+# Remove participants that did not complete MS condition correctly
+df_concat = subset(df_concat, df_concat$MIND.ID.Updated != '19' & df_concat$MIND.ID.Updated != '95' & df_concat$MIND.ID.Updated != '136' & df_concat$MIND.ID.Updated != '137')
+
+# write.csv(df_concat, 'E:/Data/MSIT_MIND/merged_demo_behavioral.csv')
+
+#############################################################################################
+# By HIV Status
+
+df_HIV = df_concat[which(df_concat$Group == 'HIV+ Patient'),]
+df_Control = df_concat[which(df_concat$Group == 'Control'),]
+
+#No difference in accepted trials per condition across HIV/Control groups
+t.test(df_Control$All_Correct_Total_Trials, df_HIV$All_Correct_Total_Trials, alternative='two.sided', var.equal=FALSE)
+t.test(df_Control$Control_Accepted_Trials, df_HIV$Control_Accepted_Trials, alternative='two.sided', var.equal=FALSE)
+t.test(df_Control$Spatial_Accepted_Trials, df_HIV$Spatial_Accepted_Trials, alternative='two.sided', var.equal=FALSE)
+t.test(df_Control$Identity_Accepted_Trials, df_HIV$Identity_Accepted_Trials, alternative='two.sided', var.equal=FALSE)
+t.test(df_Control$Multi_Source_Accepted_Trials, df_HIV$Multi_Source_Accepted_Trials, alternative='two.sided', var.equal=FALSE)
 #############################################################################################
 # Correct Accepted Trials
 
@@ -54,6 +71,10 @@ anova_df[,1] = as.integer(as.character(anova_df[,1]))
 
 res.aov = aov(num_correct ~ condition_label, data=anova_df)
 summary(res.aov)
+
+emt1 = emmeans(res.aov, ~condition_label, var='num_correct')
+test(emt1)
+contrast(emt1, 'pairwise')
 
 
 #############################################################################################
