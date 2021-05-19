@@ -10,7 +10,7 @@ df = read.table(filename, sep='\t', header=TRUE)
 
 correct_trial = vector(length = dim(df)[1])
 
-# Label correct trials
+# Label correct trials for full trigger file
 for (i in 1:(dim(df)[1]-1)){
   
   if (df$TriNo[i] == 12309 && df$TriNo[i+1] == 12544 ||
@@ -64,7 +64,8 @@ flanker_correct = length(grep('Flanker', df$correct_trial))
 simon_correct = length(grep('Simon', df$correct_trial))
 ms_correct = length(grep('MultiSource', df$correct_trial))
 
-max_count = min(control_correct, flanker_correct, simon_correct, ms_correct)
+# Add constant so that an excess number of trials is not removed
+max_count = min(control_correct, flanker_correct, simon_correct, ms_correct) + 5
 
 control_rand = floor(runif((control_correct - max_count), min=1, max=control_correct))
 flanker_rand = floor(runif((flanker_correct - max_count), min=1, max=flanker_correct))
