@@ -4,7 +4,6 @@ library(openxlsx)
 demo_df = read.csv('E:/Data/MSIT_MIND/mind_msit_demographics_R_format.csv')
 
 path = 'E:/Data/MSIT_MIND/MEG/Artifact_Scan_LogFiles/'
-savename = 'E:/Data/MSIT_MIND/MEG/master_logfile.csv'
 
 filenames_list = list.files(path=path, full.names=TRUE)
 
@@ -21,10 +20,7 @@ colnames(df_concat)[1] = 'MIND.ID.Updated'
 
 df_concat = merge(demo_df, df_concat, by='MIND.ID.Updated')
 
-# Remove participants that did not complete MS condition correctly
-df_concat = subset(df_concat, df_concat$MIND.ID.Updated != '19' & df_concat$MIND.ID.Updated != '95' & df_concat$MIND.ID.Updated != '136' & df_concat$MIND.ID.Updated != '137')
-
-# write.csv(df_concat, 'E:/Data/MSIT_MIND/merged_demo_behavioral.csv')
+# write.csv(df_concat, 'E:/Data/MSIT_MIND/merged_demo_behavioral_artifact_scan_high_pass.csv')
 
 #############################################################################################
 # By HIV Status
