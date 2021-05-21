@@ -1,4 +1,5 @@
 #############################################################################################
+# Create merged demographic / behavior csv
 library(openxlsx)
 
 demo_df = read.csv('E:/Data/MSIT_MIND/mind_msit_demographics_R_format.csv')
@@ -8,10 +9,12 @@ path = 'E:/Data/MSIT_MIND/MEG/Artifact_Scan_LogFiles/'
 filenames_list = list.files(path=path, full.names=TRUE)
 
 df_concat = read.csv(filenames_list[1])
+df_concat = subset(df_concat)
 
 for (i in 2:length(filenames_list)) {
   
   df_temp = read.csv(filenames_list[i])
+  df_temp = subset(df_temp)
   df_concat = rbind(df_concat, df_temp)
   
 }
@@ -20,43 +23,45 @@ colnames(df_concat)[1] = 'MIND.ID.Updated'
 
 df_concat = merge(demo_df, df_concat, by='MIND.ID.Updated')
 
-# write.csv(df_concat, 'E:/Data/MSIT_MIND/merged_demo_behavioral_artifact_scan_high_pass.csv')
+# write.csv(df_concat, 'E:/Data/MSIT_MIND/merged_demo_behavioral_artifact_scan_high_pass_evt_modified_v2.csv')
+
+df_concat = read.csv('E:/Data/MSIT_MIND/merged_demo_behavioral_artifact_scan_high_pass_evt_modified_v2.csv')
 
 #############################################################################################
-# By HIV Status
+# Comparisons by HIV Status
 
 df_HIV = df_concat[which(df_concat$Group == 'HIV+ Patient'),]
 df_Control = df_concat[which(df_concat$Group == 'Control'),]
 
 #No difference in accepted trials per condition across HIV/Control groups
-t.test(df_Control$All_Correct_Total_Trials, df_HIV$All_Correct_Total_Trials, alternative='two.sided', var.equal=FALSE)
+t.test(df_Control$All_Correct_Accepted_Trials, df_HIV$All_Correct_Accepted_Trials, alternative='two.sided', var.equal=FALSE)
 t.test(df_Control$Control_Accepted_Trials, df_HIV$Control_Accepted_Trials, alternative='two.sided', var.equal=FALSE)
 t.test(df_Control$Spatial_Accepted_Trials, df_HIV$Spatial_Accepted_Trials, alternative='two.sided', var.equal=FALSE)
 t.test(df_Control$Identity_Accepted_Trials, df_HIV$Identity_Accepted_Trials, alternative='two.sided', var.equal=FALSE)
 t.test(df_Control$Multi_Source_Accepted_Trials, df_HIV$Multi_Source_Accepted_Trials, alternative='two.sided', var.equal=FALSE)
 #############################################################################################
-# Correct Accepted Trials
+# Comparisons by Correct Accepted Trials
 
-mean_all = mean(df_concat$All_Correct_Total_Trials)
-sd_all = sd(df_concat$All_Correct_Total_Trials)
-mean_flanker = mean(df_concat$Identity_Total_Trials)
-sd_flanker = sd(df_concat$Identity_Total_Trials)
-mean_simon = mean(df_concat$Spatial_Total_Trials)
-sd_simon = sd(df_concat$Spatial_Total_Trials)
-mean_control = mean(df_concat$Control_Total_Trials)
-sd_control = sd(df_concat$Control_Total_Trials)
-mean_msit = mean(df_concat$Multi_Source_Total_Trials)
-sd_msit = sd(df_concat$Multi_Source_Total_Trials)
+mean_all = mean(df_concat$All_Correct_Accepted_Trials)
+sd_all = sd(df_concat$All_Correct_Accepted_Trials)
+mean_flanker = mean(df_concat$Identity_Accepted_Trials)
+sd_flanker = sd(df_concat$Identity_Accepted_Trials)
+mean_simon = mean(df_concat$Spatial_Accepted_Trials)
+sd_simon = sd(df_concat$Spatial_Accepted_Trials)
+mean_control = mean(df_concat$Control_Accepted_Trials)
+sd_control = sd(df_concat$Control_Accepted_Trials)
+mean_msit = mean(df_concat$Multi_Source_Accepted_Trials)
+sd_msit = sd(df_concat$Multi_Source_Accepted_Trials)
 
 threshold = mean_all - 2.5*sd_all
-df_concat = subset(df_concat, df_concat$All_Correct_Total_Trials > threshold)
+df_concat = subset(df_concat, df_concat$All_Correct_Accepted_Trials > threshold)
 
 # Reorganize data
 
 num_samples = dim(df_concat)[1]
 
-num_correct = c(df_concat$Control_Total_Trials, df_concat$Spatial_Total_Trials,
-                df_concat$Identity_Total_Trials, df_concat$Multi_Source_Total_Trials)
+num_correct = c(df_concat$Control_Accepted_Trials, df_concat$Spatial_Accepted_Trials,
+                df_concat$Identity_Accepted_Trials, df_concat$Multi_Source_Accepted_Trials)
 condition_label = c(rep(c('Control'), num_samples), rep(c('Spatial'), num_samples),
                     rep(c('Identity'), num_samples), rep(c('MSIT'), num_samples))
 anova_df = as.data.frame(cbind(num_correct, condition_label))
@@ -66,7 +71,7 @@ anova_df[,1] = as.integer(as.character(anova_df[,1]))
 # Run ANOVA
 
 res.aov = aov(num_correct ~ condition_label, data=anova_df)
-summary(res.aov)
+# summary(res.aov)
 
 emt1 = emmeans(res.aov, ~condition_label, var='num_correct')
 test(emt1)
@@ -74,9 +79,9 @@ contrast(emt1, 'pairwise')
 
 
 #############################################################################################
-# Response Times
+# Comparisons by Response Times
 
-rt_df = read.csv('E:/Data/MSIT_MIND/group_RT_original.csv')
+rt_df = read.csv('E:/Data/MSIT_MIND/group_RT_v2.csv')
 
 mean_all = mean(rt_df$All_Correct)
 sd_all = sd(rt_df$All_Correct)
@@ -96,19 +101,36 @@ rt_df = subset(rt_df, rt_df$All_Correct > threshold)
 
 num_samples = dim(rt_df)[1]
 
-RT = c(rt_df$All_Correct, rt_df$Simon,
-                rt_df$Flanker, rt_df$MultiSource)
+RT = c(rt_df$Control, rt_df$Simon, rt_df$Flanker, rt_df$MultiSource)
 condition_label = c(rep(c('Control'), num_samples), rep(c('Spatial'), num_samples),
-                    rep(c('Identity'), num_samples), rep(c('MultiSource'), num_samples))
+                    rep(c('Identity'), num_samples), rep(c('MS'), num_samples))
 anova_df = as.data.frame(cbind(RT, condition_label))
 
+anova_df$condition_label <- factor(anova_df$condition_label , levels=c("Control", "Spatial", "Identity", "MS"))
 anova_df[,1] = as.integer(as.character(anova_df[,1]))
+boxplot(RT~condition_label, data=anova_df)
 
 # Run ANOVA
 
-res.aov = aov(num_correct ~ condition_label, data=anova_df)
+res.aov = aov(RT ~ condition_label, data=anova_df)
 summary(res.aov)
 
 emt1 = emmeans(res.aov, ~condition_label, var='RT')
 test(emt1)
 contrast(emt1, 'pairwise')
+
+# Superadditive RT Test
+
+RT = c(rt_df$Superadd_Int, rt_df$MS_Int)
+condition_label = c(rep(c('Super'), num_samples), rep(c('MS'), num_samples))
+rt_super = as.data.frame(cbind(RT, condition_label))
+
+rt_super$condition_label <- factor(rt_super$condition_label , levels=c('Super', 'MS'))
+rt_super[,1] = as.integer(as.character(rt_super[,1]))
+boxplot(RT~condition_label, data=rt_super)
+
+rt_super_super = subset(rt_super, rt_super$condition_label == 'Super')
+rt_super_ms = subset(rt_super, rt_super$condition_label == 'MS')
+
+t.test(rt_super_super$RT, rt_super_ms$RT, alternative='two.sided', var.equal=FALSE)
+
