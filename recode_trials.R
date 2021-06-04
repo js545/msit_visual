@@ -3,9 +3,8 @@
 # Dicon Lab
 
 # Read in file
-# Top 30 participants with largest Control-MS difference
-mind_ids = c('084', '105', '106', '116', '103', '133', '073', '006', '016', '143', '164', '030', '074', '013', '088',
-             '096', '134', '158', '099', '161', '180', '059', '097', '149', '155', '181', '004', '010', '058', '080')
+# Next 5 participants with greatest control-ms correct accepted trials
+mind_ids = c('082', '107', '118', '165', '029')
 
 for (mind_id in mind_ids){
   

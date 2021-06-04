@@ -2,7 +2,9 @@
 # Create merged demographic / behavior csv
 library(openxlsx)
 
-demo_df = read.csv('E:/Data/MSIT_MIND/mind_msit_demographics_R_format.csv')
+# demo_df = read.csv('E:/Data/MSIT_MIND/mind_msit_demographics_R_format.csv')
+# demo_df = read.csv('E:/Data/MSIT_MIND/MIND_Demographic_Data_v2_R_format.csv')
+demo_df = read.csv('E:/Data/MSIT_MIND/msit_mind_demographics_150.csv')
 
 path = 'E:/Data/MSIT_MIND/MEG/Artifact_Scan_LogFiles/'
 
@@ -23,9 +25,9 @@ colnames(df_concat)[1] = 'MIND.ID.Updated'
 
 df_concat = merge(demo_df, df_concat, by='MIND.ID.Updated')
 
-# write.csv(df_concat, 'E:/Data/MSIT_MIND/merged_demo_behavioral_artifact_scan_high_pass_evt_modified_v2.csv')
+# write.csv(df_concat, 'E:/Data/MSIT_MIND/merged_demo_behavioral_150.csv')
 
-df_concat = read.csv('E:/Data/MSIT_MIND/merged_demo_behavioral_artifact_scan_high_pass_evt_modified_v2.csv')
+df_concat = read.csv('E:/Data/MSIT_MIND/merged_demo_behavioral_150.csv')
 
 #############################################################################################
 # Comparisons by HIV Status
@@ -42,6 +44,8 @@ t.test(df_Control$Multi_Source_Accepted_Trials, df_HIV$Multi_Source_Accepted_Tri
 #############################################################################################
 # Comparisons by Correct Accepted Trials
 
+library(emmeans)
+
 mean_all = mean(df_concat$All_Correct_Accepted_Trials)
 sd_all = sd(df_concat$All_Correct_Accepted_Trials)
 mean_flanker = mean(df_concat$Identity_Accepted_Trials)
@@ -52,9 +56,6 @@ mean_control = mean(df_concat$Control_Accepted_Trials)
 sd_control = sd(df_concat$Control_Accepted_Trials)
 mean_msit = mean(df_concat$Multi_Source_Accepted_Trials)
 sd_msit = sd(df_concat$Multi_Source_Accepted_Trials)
-
-threshold = mean_all - 2.5*sd_all
-df_concat = subset(df_concat, df_concat$All_Correct_Accepted_Trials > threshold)
 
 # Reorganize data
 
@@ -81,7 +82,8 @@ contrast(emt1, 'pairwise')
 #############################################################################################
 # Comparisons by Response Times
 
-rt_df = read.csv('E:/Data/MSIT_MIND/group_RT_v2.csv')
+# Need to extract group RT with bad files removed
+rt_df = read.csv('E:/Data/MSIT_MIND/group_RT_150.csv')
 
 mean_all = mean(rt_df$All_Correct)
 sd_all = sd(rt_df$All_Correct)
@@ -119,18 +121,19 @@ emt1 = emmeans(res.aov, ~condition_label, var='RT')
 test(emt1)
 contrast(emt1, 'pairwise')
 
+#############################################################################################
 # Superadditive RT Test
 
 RT = c(rt_df$Superadd_Int, rt_df$MS_Int)
-condition_label = c(rep(c('Super'), num_samples), rep(c('MS'), num_samples))
-rt_super = as.data.frame(cbind(RT, condition_label))
+condition_label = c(rep(c('Additive'), num_samples), rep(c('MS'), num_samples))
+rt_int = as.data.frame(cbind(RT, condition_label))
 
-rt_super$condition_label <- factor(rt_super$condition_label , levels=c('Super', 'MS'))
-rt_super[,1] = as.integer(as.character(rt_super[,1]))
-boxplot(RT~condition_label, data=rt_super)
+rt_int$condition_label <- factor(rt_int$condition_label , levels=c('Additive', 'MS'))
+rt_int[,1] = as.integer(as.character(rt_int[,1]))
+boxplot(RT~condition_label, data=rt_int)
 
-rt_super_super = subset(rt_super, rt_super$condition_label == 'Super')
-rt_super_ms = subset(rt_super, rt_super$condition_label == 'MS')
+rt_super = subset(rt_int, rt_int$condition_label == 'Additive')
+rt_ms_raw = subset(rt_int, rt_int$condition_label == 'MS')
 
-t.test(rt_super_super$RT, rt_super_ms$RT, alternative='two.sided', var.equal=FALSE)
+t.test(rt_super$RT, rt_ms_raw$RT, alternative='two.sided', var.equal=FALSE)
 
