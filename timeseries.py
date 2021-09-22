@@ -1,9 +1,13 @@
+import scipy
 import numpy as np
 import pandas as pd
+import pingouin as pg
 import matplotlib.pyplot as plt
 from scipy.stats import f_oneway
+from statsmodels.stats.anova import AnovaRM
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_rel_timeseries_concat.csv'
+filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_-30_-76_5/timeseries/alpha_-30_-76_5_rel_timeseries_concat.csv'
 
 # df = pd.read_csv(filename)
 #
@@ -34,26 +38,35 @@ filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/ti
 
 df = pd.read_csv(filename)
 
-df_control = list(df[df['condition'] == 'Control']['mean'])
-df_simon = list(df[df['condition'] == 'Simon']['mean'])
-df_flanker = list(df[df['condition'] == 'Flanker']['mean'])
-df_ms = list(df[df['condition'] == 'MultiSource']['mean'])
+aovrm = AnovaRM(df, 'mean', 'ID', within=['condition'])
+res = aovrm.fit()
+print(res)
+aovrm = pg.rm_anova(dv='mean', within=['condition'], subject='ID', data=df, detailed=True)
+print(aovrm)
 
-f, p = f_oneway(df_control, df_simon, df_flanker, df_ms)
+scipy.stats.ttest_rel(df[df['condition'] == 'Control']['mean'], df[df['condition'] == 'MultiSource']['mean'])
 
+aovrm = pg.rm_anova(dv='mean', within=['condition', 'group'], subject='ID', data=df, detailed=True)
+print(aovrm.round(3))
+
+# tukey = pairwise_tukeyhsd(endog=df['peak'], groups=df['condition'], alpha=.05)
+# print(tukey)
+
+
+########################################################################################################################
 # Plot figures
 
-time = np.linspace(-500, 1000, df.shape[1]-2)
-
-plt.figure()
-plt.plot(time, df[df['condition'] == 'Control'].mean(), label='Control')
-plt.plot(time, df[df['condition'] == 'Simon'].mean(), label='Simon')
-plt.plot(time, df[df['condition'] == 'Flanker'].mean(), label='Flanker')
-plt.plot(time, df[df['condition'] == 'MultiSource'].mean(), label='MultiSource')
-plt.axvline(x=0, color='black', alpha=.5)
-plt.axvline(x=150, color='black', linestyle='--', alpha=.5)
-plt.axvline(x=300, color='black', linestyle='--', alpha=.5)
-plt.legend()
-plt.savefig('E:/Data/MSIT_MIND/msit_visual/figures/gamma_-14_-88_5_abs.jpg', dpi=300)
-plt.show()
+# time = np.linspace(-500, 1000, df.shape[1]-4)
+#
+# plt.figure()
+# plt.plot(time, df[df['condition'] == 'Control'].mean()[:61], label='Control')
+# plt.plot(time, df[df['condition'] == 'Simon'].mean()[:61], label='Simon')
+# plt.plot(time, df[df['condition'] == 'Flanker'].mean()[:61], label='Flanker')
+# plt.plot(time, df[df['condition'] == 'MultiSource'].mean()[:61], label='MultiSource')
+# plt.axvline(x=0, color='black', alpha=.5)
+# plt.axvline(x=150, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=300, color='black', linestyle='--', alpha=.5)
+# plt.legend()
+# plt.savefig('E:/Data/MSIT_MIND/msit_visual/figures/gamma_-14_-88_5_abs.jpg', dpi=300)
+# plt.show()
 
