@@ -15,8 +15,13 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 # filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_34_-76_9/timeseries/alpha_34_-76_9_rel_timeseries_concat.csv'
 # filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_abs_timeseries_concat.csv'
 # filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_rel_timeseries_concat.csv'
-filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_abs_timeseries_concat.csv'
-# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_rel_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_abs_timeseries_concat.csv'
+filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_rel_timeseries_concat.csv'
+
+df = pd.read_csv(filename)
+aovrm = pg.mixed_anova(dv='peak', within='condition', between='group', subject='ID', data=df)
+print(aovrm.round(3))
+pg.print_table(aovrm)
 
 df = pd.read_csv(filename)
 df = df[(df['condition'] == 'Flanker') & (df['group'] == 'Control')]
@@ -57,13 +62,17 @@ print(p)
 
 df = pd.read_csv(filename)
 
-# aovrm = AnovaRM(df, 'mean', 'ID', within=['condition'])
+# aovrm = AnovaRM(df, 'mean', 'ID', within=['group'])
 # res = aovrm.fit()
 # print(res)
-aovrm = pg.rm_anova(dv='peak', within='condition', subject='ID', data=df, detailed=True)
+
+aovrm = pg.rm_anova(dv='mean', within='group', subject='ID', data=df, detailed=True)
 print(aovrm)
 
-aovrm = pg.friedman(dv='peak', within='condition', subject='ID', data=df)
+aovrm = pg.friedman(dv='mean', within='group', subject='ID', data=df)
+print(aovrm)
+
+aovrm = pg.anova(dv='peak', between='group', data=df)
 print(aovrm)
 
 # scipy.stats.ttest_rel(df[df['condition'] == 'Control']['mean'], df[df['condition'] == 'MultiSource']['mean'])
@@ -71,7 +80,7 @@ print(aovrm)
 ########################################################################################################################
 # Two-way RM-ANOVA
 
-aovrm = pg.rm_anova(dv='mean', within=['condition', 'group'], subject='ID', data=df, detailed=True)
+aovrm = pg.mixed_anova(dv='mean', within='condition', between='group', subject='ID', data=df)
 print(aovrm.round(3))
 pg.print_table(aovrm)
 
@@ -91,8 +100,8 @@ plt.plot(time, df[df['condition'] == 'Flanker'].mean()[:61], label='Flanker')
 plt.plot(time, df[df['condition'] == 'MultiSource'].mean()[:61], label='MultiSource')
 plt.axvline(x=0, color='black', alpha=.5)
 
-plt.axvline(x=-150, color='black', linestyle='--', alpha=.5)
-plt.axvline(x=0, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=-150, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=0, color='black', linestyle='--', alpha=.5)
 
 # plt.axvline(x=150, color='black', linestyle='--', alpha=.5)
 # plt.axvline(x=300, color='black', linestyle='--', alpha=.5)
@@ -126,3 +135,36 @@ plt.axvline(x=150, color='black', linestyle='--', alpha=.5)
 plt.axvline(x=300, color='black', linestyle='--', alpha=.5)
 plt.legend()
 plt.show()
+
+
+
+# Plot HIV vs Control Figures
+
+df_hiv = df[df['group'] == 'HIV']
+df_con = df[df['group'] == 'Control']
+
+plt.figure()
+plt.plot(time, df_hiv.mean()[:61], label='HIV', color='blue')
+plt.plot(time, df_con.mean()[:61], label='Control', color='red')
+plt.axvline(x=0, color='black', alpha=.5)
+
+# plt.axvline(x=-400, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=0, color='black', linestyle='--', alpha=.5)
+
+# plt.axvline(x=200, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=600, color='black', linestyle='--', alpha=.5)
+
+# plt.axvline(x=-150, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=0, color='black', linestyle='--', alpha=.5)
+
+plt.axvline(x=150, color='black', linestyle='--', alpha=.5)
+plt.axvline(x=300, color='black', linestyle='--', alpha=.5)
+
+plt.legend()
+plt.savefig('E:/Data/MSIT_MIND/msit_visual/figures/group_gamma_30_-88_9_rel.jpg', dpi=300)
+plt.show()
+
+
+
+
+
