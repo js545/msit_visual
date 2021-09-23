@@ -9,10 +9,22 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 ########################################################################################################################
 
-filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_rel_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_-30_-76_5/timeseries/alpha_-30_-76_5_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_-30_-76_5/timeseries/alpha_-30_-76_5_rel_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_34_-76_9/timeseries/alpha_34_-76_9_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_34_-76_9/timeseries/alpha_34_-76_9_rel_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_rel_timeseries_concat.csv'
+filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_rel_timeseries_concat.csv'
 
-scipy.stats.shapiro()
+df = pd.read_csv(filename)
+df = df[(df['condition'] == 'Flanker') & (df['group'] == 'Control')]
 
+test_stat, p = scipy.stats.shapiro(df['mean'])
+print(p)
+test_stat, p = scipy.stats.shapiro(df['peak'])
+print(p)
 
 ########################################################################################################################
 
@@ -50,8 +62,9 @@ df = pd.read_csv(filename)
 # print(res)
 aovrm = pg.rm_anova(dv='peak', within='condition', subject='ID', data=df, detailed=True)
 print(aovrm)
-# aovrm = pg.friedman(dv='mean', within='condition', subject='ID', data=df)
-# print(aovrm)
+
+aovrm = pg.friedman(dv='peak', within='condition', subject='ID', data=df)
+print(aovrm)
 
 # scipy.stats.ttest_rel(df[df['condition'] == 'Control']['mean'], df[df['condition'] == 'MultiSource']['mean'])
 
@@ -69,7 +82,7 @@ pg.print_table(aovrm)
 ########################################################################################################################
 # Plot figures
 
-time = np.linspace(-500, 1000, df.shape[1]-4)
+time = np.linspace(-500, 1000, df.shape[1]-5)
 
 plt.figure()
 plt.plot(time, df[df['condition'] == 'Control'].mean()[:61], label='Control')
@@ -77,10 +90,21 @@ plt.plot(time, df[df['condition'] == 'Simon'].mean()[:61], label='Simon')
 plt.plot(time, df[df['condition'] == 'Flanker'].mean()[:61], label='Flanker')
 plt.plot(time, df[df['condition'] == 'MultiSource'].mean()[:61], label='MultiSource')
 plt.axvline(x=0, color='black', alpha=.5)
-plt.axvline(x=150, color='black', linestyle='--', alpha=.5)
-plt.axvline(x=300, color='black', linestyle='--', alpha=.5)
+
+plt.axvline(x=-150, color='black', linestyle='--', alpha=.5)
+plt.axvline(x=0, color='black', linestyle='--', alpha=.5)
+
+# plt.axvline(x=150, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=300, color='black', linestyle='--', alpha=.5)
+#
+# plt.axvline(x=-400, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=0, color='black', linestyle='--', alpha=.5)
+#
+# plt.axvline(x=200, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=600, color='black', linestyle='--', alpha=.5)
+
 plt.legend()
-plt.savefig('E:/Data/MSIT_MIND/msit_visual/figures/gamma_-14_-88_5_abs.jpg', dpi=300)
+plt.savefig('E:/Data/MSIT_MIND/msit_visual/figures/gamma_30_-88_9_abs.jpg', dpi=300)
 plt.show()
 
 # Plot HIV vs Control Figures
