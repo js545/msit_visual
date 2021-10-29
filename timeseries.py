@@ -15,8 +15,8 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 # filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_34_-76_9/timeseries/alpha_34_-76_9_rel_timeseries_concat.csv'
 # filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_abs_timeseries_concat.csv'
 # filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_rel_timeseries_concat.csv'
-# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_abs_timeseries_concat.csv'
-filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_rel_timeseries_concat.csv'
+filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_rel_timeseries_concat.csv'
 
 df = pd.read_csv(filename)
 aovrm = pg.mixed_anova(dv='peak', within='condition', between='group', subject='ID', data=df)
@@ -91,7 +91,7 @@ pg.print_table(aovrm)
 ########################################################################################################################
 # Plot figures
 
-time = np.linspace(-500, 1000, df.shape[1]-5)
+time = np.linspace(-500, 1000, 61)
 
 plt.figure()
 plt.plot(time, df[df['condition'] == 'Control'].mean()[:61], label='Control')
@@ -142,6 +142,8 @@ plt.show()
 
 df_hiv = df[df['group'] == 'HIV']
 df_con = df[df['group'] == 'Control']
+df_con = df_con[(df_con['condition'] == 'Control') | (df_con['condition'] == 'Simon') | (df_con['condition'] == 'Flanker') | (df_con['condition'] == 'Multisource')]
+df_hiv = df_hiv[(df_con['condition'] == 'Control') | (df_hiv['condition'] == 'Simon') | (df_hiv['condition'] == 'Flanker') | (df_hiv['condition'] == 'Multisource')]
 
 plt.figure()
 plt.plot(time, df_hiv.mean()[:61], label='HIV', color='blue')
@@ -154,15 +156,95 @@ plt.axvline(x=0, color='black', alpha=.5)
 # plt.axvline(x=200, color='black', linestyle='--', alpha=.5)
 # plt.axvline(x=600, color='black', linestyle='--', alpha=.5)
 
-# plt.axvline(x=-150, color='black', linestyle='--', alpha=.5)
-# plt.axvline(x=0, color='black', linestyle='--', alpha=.5)
+plt.axvline(x=-150, color='black', linestyle='--', alpha=.5)
+plt.axvline(x=0, color='black', linestyle='--', alpha=.5)
 
-plt.axvline(x=150, color='black', linestyle='--', alpha=.5)
-plt.axvline(x=300, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=150, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=300, color='black', linestyle='--', alpha=.5)
 
 plt.legend()
-plt.savefig('E:/Data/MSIT_MIND/msit_visual/figures/group_gamma_30_-88_9_rel.jpg', dpi=300)
+plt.savefig('E:/Data/MSIT_MIND/msit_visual/figures/group_gamma_30_-88_9_abs.jpg', dpi=300)
 plt.show()
+
+
+
+
+
+########################################################################################################################
+
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_-30_-76_5/timeseries/alpha_-30_-76_5_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_-30_-76_5/timeseries/alpha_-30_-76_5_rel_timeseries_concat.csv'
+filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_34_-76_9/timeseries/alpha_34_-76_9_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_34_-76_9/timeseries/alpha_34_-76_9_rel_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_rel_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_rel_timeseries_concat.csv'
+
+df = pd.read_csv(filename)
+
+df_low = df['mean'].mean() - 2.5*df['mean'].std()
+df_high = df['mean'].mean() + 2.5*df['mean'].std()
+
+df = df.loc[df['mean'] < df_high]
+df = df.loc[df['mean'] > df_low]
+
+plt.figure()
+plt.scatter(df['mean'], df['Response_Time'])
+plt.show()
+
+
+########################################################################################################################
+# Timeseries subtraction
+
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_-30_-76_5/timeseries/alpha_-30_-76_5_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_-30_-76_5/timeseries/alpha_-30_-76_5_rel_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_34_-76_9/timeseries/alpha_34_-76_9_abs_timeseries_concat.csv'
+filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_34_-76_9/timeseries/alpha_34_-76_9_rel_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_rel_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_abs_timeseries_concat.csv'
+# filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_rel_timeseries_concat.csv'
+
+df = pd.read_csv(filename)
+df_con = df[df['group'] == 'Control']
+df_hiv = df[df['group'] == 'HIV']
+df_con_sub = df_con[(df_con['condition'] == 'Simon_Control') | (df_con['condition'] == 'Flanker_Control') | (df_con['condition'] == 'MS_Control')]
+df_hiv_sub = df_hiv[(df_hiv['condition'] == 'Simon_Control') | (df_hiv['condition'] == 'Flanker_Control') | (df_hiv['condition'] == 'MS_Control')]
+
+time = np.linspace(-500, 1000, 61)
+
+plt.figure()
+
+# plt.plot(time, df_con_sub.mean()[:61], color='red', label='Control')
+# plt.plot(time, df_hiv_sub.mean()[:61], color='blue', label='HIV')
+
+plt.plot(time, df[df['condition'] == 'Simon_Control'].mean()[:61], color='C1', label='Simon_Sub')
+plt.plot(time, df[df['condition'] == 'Flanker_Control'].mean()[:61], color='C2', label='Flanker_Sub')
+plt.plot(time, df[df['condition'] == 'MS_Control'].mean()[:61], color='C3', label='MS_Sub')
+
+# plt.plot(time, df_con[df_con['condition'] == 'Simon_Control'].mean()[:61], color='C1', label='Control Simon_Sub')
+# plt.plot(time, df_con[df_con['condition'] == 'Flanker_Control'].mean()[:61], color='C2', label='Control Flanker_Sub')
+# plt.plot(time, df_con[df_con['condition'] == 'MS_Control'].mean()[:61], color='C3', label='Control MS_Sub')
+# plt.plot(time, df_hiv[df_hiv['condition'] == 'Simon_Control'].mean()[:61], color='C1', linestyle='--', label='HIV Simon_Sub')
+# plt.plot(time, df_hiv[df_hiv['condition'] == 'Flanker_Control'].mean()[:61], color='C2', linestyle='--', label='HIV Flanker_Sub')
+# plt.plot(time, df_hiv[df_hiv['condition'] == 'MS_Control'].mean()[:61], color='C3', linestyle='--', label='HIV MS_Sub')
+
+plt.axvline(x=0, color='black', alpha=.5)
+
+
+plt.axvline(x=200, color='black', linestyle='--', alpha=.5)
+plt.axvline(x=600, color='black', linestyle='--', alpha=.5)
+
+# plt.axvline(x=150, color='black', linestyle='--', alpha=.5)
+# plt.axvline(x=300, color='black', linestyle='--', alpha=.5)
+
+plt.legend()
+plt.savefig('E:/Data/MSIT_MIND/msit_visual/figures/subtraction_alpha_34_-76_9_rel_conditions.jpg', dpi=300)
+plt.show()
+
+
+
 
 
 
