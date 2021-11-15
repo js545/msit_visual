@@ -1,5 +1,6 @@
 # MSIT MIND Manuscript
 # Load packages
+library(emmeans)
 library(ggpubr)
 
 ###############################################################
@@ -13,20 +14,20 @@ rt_cont = subset(rt_cont, rt_cont$Response_Time > rt_mean - 2.5 * rt_stdv)
 rt_cont = subset(rt_cont, rt_cont$Response_Time < rt_mean + 2.5 * rt_stdv)
 
 rt_simon = rt_df[which(rt_df$Condition == 'Simon'),]
-rt_mean = mean(rt_cont$Response_Time)
-rt_stdv = sd(rt_cont$Response_Time)
+rt_mean = mean(rt_simon$Response_Time)
+rt_stdv = sd(rt_simon$Response_Time)
 rt_simon = subset(rt_simon, rt_simon$Response_Time > rt_mean - 2.5 * rt_stdv)
 rt_simon = subset(rt_simon, rt_simon$Response_Time < rt_mean + 2.5 * rt_stdv)
 
 rt_flan = rt_df[which(rt_df$Condition == 'Flanker'),]
-rt_mean = mean(rt_cont$Response_Time)
-rt_stdv = sd(rt_cont$Response_Time)
+rt_mean = mean(rt_flan$Response_Time)
+rt_stdv = sd(rt_flan$Response_Time)
 rt_flan = subset(rt_flan, rt_flan$Response_Time > rt_mean - 2.5 * rt_stdv)
 rt_flan = subset(rt_flan, rt_flan$Response_Time < rt_mean + 2.5 * rt_stdv)
 
 rt_ms = rt_df[which(rt_df$Condition == 'MultiSource'),]
-rt_mean = mean(rt_cont$Response_Time)
-rt_stdv = sd(rt_cont$Response_Time)
+rt_mean = mean(rt_ms$Response_Time)
+rt_stdv = sd(rt_ms$Response_Time)
 rt_ms = subset(rt_ms, rt_ms$Response_Time > rt_mean - 2.5 * rt_stdv)
 rt_ms = subset(rt_ms, rt_ms$Response_Time < rt_mean + 2.5 * rt_stdv)
 
@@ -44,17 +45,114 @@ rt_df$Condition <- factor(rt_df$Condition,
 ggboxplot(rt_df, x='Group', y='Response_Time', color='Condition') + labs(y='Response Time (ms)')
 
 ###############################################################
-# Accuracy Outliers by Condition
+# Average RT by group and condition
+rt_df = read.csv('E:/Data/MSIT_MIND/group_RT_129_modified_v2.csv')
+df_con = rt_df[which(rt_df$Group == 'Control'),]
+df_hiv = rt_df[which(rt_df$Group == 'HIV'),]
+
+rt_cont = df_con[which(df_con$Condition == 'Control'),]
+rt_mean = mean(rt_cont$Response_Time)
+rt_stdv = sd(rt_cont$Response_Time)
+
+rt_cont = df_hiv[which(df_hiv$Condition == 'Control'),]
+rt_mean = mean(rt_cont$Response_Time)
+rt_stdv = sd(rt_cont$Response_Time)
+
+rt_simon = df_con[which(df_con$Condition == 'Simon'),]
+rt_mean = mean(rt_simon$Response_Time)
+rt_stdv = sd(rt_simon$Response_Time)
+
+rt_simon = df_hiv[which(df_hiv$Condition == 'Simon'),]
+rt_mean = mean(rt_simon$Response_Time)
+rt_stdv = sd(rt_simon$Response_Time)
+
+rt_flanker = df_con[which(df_con$Condition == 'Flanker'),]
+rt_mean = mean(rt_flanker$Response_Time)
+rt_stdv = sd(rt_flanker$Response_Time)
+
+rt_flanker = df_hiv[which(df_hiv$Condition == 'Flanker'),]
+rt_mean = mean(rt_flanker$Response_Time)
+rt_stdv = sd(rt_flanker$Response_Time)
+
+rt_ms = df_con[which(df_con$Condition == 'MultiSource'),]
+rt_mean = mean(rt_ms$Response_Time)
+rt_stdv = sd(rt_ms$Response_Time)
+
+rt_ms = df_hiv[which(df_hiv$Condition == 'MultiSource'),]
+rt_mean = mean(rt_ms$Response_Time)
+rt_stdv = sd(rt_ms$Response_Time)
+
+###############################################################
+# Average accuracy by group and condition
 
 df = read.csv('E:/Data/MSIT_MIND/accuracy_129.csv')
 
+df_con = df[which(df$Group == 'Control'),]
+df_hiv = df[which(df$Group == 'HIV'),]
+
+rt_con_mean = mean(df_con$Control_Accuracy)
+rt_con_stdv = sd(df_con$Control_Accuracy)
+rt_sim_mean = mean(df_con$Simon_Accuracy)
+rt_sim_stdv = sd(df_con$Simon_Accuracy)
+rt_flanker_mean = mean(df_con$Flanker_Accuracy)
+rt_flanker_stdv = sd(df_con$Flanker_Accuracy)
+rt_ms_mean = mean(df_con$MultiSource_Accuracy)
+rt_ms_stdv = sd(df_con$MultiSource_Accuracy)
+
+rt_con_mean = mean(df_hiv$Control_Accuracy)
+rt_con_stdv = sd(df_hiv$Control_Accuracy)
+rt_sim_mean = mean(df_hiv$Simon_Accuracy)
+rt_sim_stdv = sd(df_hiv$Simon_Accuracy)
+rt_flanker_mean = mean(df_hiv$Flanker_Accuracy)
+rt_flanker_stdv = sd(df_hiv$Flanker_Accuracy)
+rt_ms_mean = mean(df_hiv$MultiSource_Accuracy)
+rt_ms_stdv = sd(df_hiv$MultiSource_Accuracy)
+
+###############################################################
+# Accuracy Normality by Condition
+
+df = read.csv('E:/Data/MSIT_MIND/accuracy_129.csv')
+
+shapiro.test(df$Control_Accuracy)
+shapiro.test(df$Simon_Accuracy)
+shapiro.test(df$Flanker_Accuracy)
+shapiro.test(df$MultiSource_Accuracy)
+
+###############################################################
+# RM-ANOVA for Response Times
+
+# Reorganize data for RM-ANOVA
+rt_df = read.csv('E:/Data/MSIT_MIND/group_RT_129.csv')
+
+num_samples = dim(rt_df)[1]
+
+RT = c(rt_df$Control, rt_df$Simon, rt_df$Flanker, rt_df$MultiSource)
+condition_label = c(rep(c('Control'), num_samples), rep(c('Spatial'), num_samples),
+                    rep(c('Identity'), num_samples), rep(c('MS'), num_samples))
+anova_df = as.data.frame(cbind(RT, condition_label))
+
+anova_df$condition_label <- factor(anova_df$condition_label , levels=c("Control", "Spatial", "Identity", "MS"))
+anova_df[,1] = as.integer(as.character(anova_df[,1]))
+boxplot(RT~condition_label, data=anova_df)
+
+# Run ANOVA
+
+res.aov = aov(RT ~ condition_label, data=anova_df)
+summary(res.aov)
+
+emt1 = emmeans(res.aov, ~condition_label, var='RT', within='Condition')
+test(emt1)
+contrast(emt1, 'pairwise')
+
+# Reorganize data for plot
+rt_df = read.csv('E:/Data/MSIT_MIND/group_RT_129_modified_v2.csv')
+rt_df$Condition <- factor(rt_df$Condition, 
+                          levels = c('Control', 'Simon', 'Flanker', 'MultiSource'),
+                          labels = c('Control', 'Simon', 'Flanker', 'MultiSource'))
+ggboxplot(rt_df, x='Group', y='Response_Time', color='Condition')
 
 
-
-
-
-
-
+#############################################################################################
 
 
 
