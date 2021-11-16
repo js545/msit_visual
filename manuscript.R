@@ -31,6 +31,8 @@ rt_stdv = sd(rt_ms$Response_Time)
 rt_ms = subset(rt_ms, rt_ms$Response_Time > rt_mean - 2.5 * rt_stdv)
 rt_ms = subset(rt_ms, rt_ms$Response_Time < rt_mean + 2.5 * rt_stdv)
 
+# Response Time Normality by Group and Condition
+
 shapiro.test(rt_cont$Response_Time)
 shapiro.test(rt_simon$Response_Time)
 shapiro.test(rt_flan$Response_Time)
@@ -119,38 +121,16 @@ shapiro.test(df$Flanker_Accuracy)
 shapiro.test(df$MultiSource_Accuracy)
 
 ###############################################################
-# RM-ANOVA for Response Times
-
-# Reorganize data for RM-ANOVA
-rt_df = read.csv('E:/Data/MSIT_MIND/group_RT_129.csv')
-
-num_samples = dim(rt_df)[1]
-
-RT = c(rt_df$Control, rt_df$Simon, rt_df$Flanker, rt_df$MultiSource)
-condition_label = c(rep(c('Control'), num_samples), rep(c('Spatial'), num_samples),
-                    rep(c('Identity'), num_samples), rep(c('MS'), num_samples))
-anova_df = as.data.frame(cbind(RT, condition_label))
-
-anova_df$condition_label <- factor(anova_df$condition_label , levels=c("Control", "Spatial", "Identity", "MS"))
-anova_df[,1] = as.integer(as.character(anova_df[,1]))
-boxplot(RT~condition_label, data=anova_df)
-
-# Run ANOVA
-
-res.aov = aov(RT ~ condition_label, data=anova_df)
-summary(res.aov)
-
-emt1 = emmeans(res.aov, ~condition_label, var='RT', within='Condition')
-test(emt1)
-contrast(emt1, 'pairwise')
+# Plot for Response Times
 
 # Reorganize data for plot
 rt_df = read.csv('E:/Data/MSIT_MIND/group_RT_129_modified_v2.csv')
 rt_df$Condition <- factor(rt_df$Condition, 
                           levels = c('Control', 'Simon', 'Flanker', 'MultiSource'),
                           labels = c('Control', 'Simon', 'Flanker', 'MultiSource'))
+tiff('E:/Data/MSIT_MIND/Manuscript/v1/Figures/response_times.png', units='in', width=5, height=5, res=300)
 ggboxplot(rt_df, x='Group', y='Response_Time', color='Condition')
-
+dev.off()
 
 #############################################################################################
 
