@@ -26,4 +26,17 @@ pg.ttest(simon['Response_Time'].values, ms['Response_Time'].values, paired=True)
 pg.ttest(flanker['Response_Time'].values, ms['Response_Time'].values, paired=True)
 
 
+########################################################################################################################
+# Alpha Condition 2x4
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Alpha/Alpha_Condition_16_-12_61_Composite_age_regressed.csv')
+
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df)
+print(aovrm.round(3))
+pg.print_table(aovrm)
+ttest = pg.pairwise_ttests(dv='Pseudot_value', within='Condition', subject='ID', padjust='bonf', data=df)
+print(ttest[['A', 'B', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Alpha/Alpha_Condition_')
+
 
