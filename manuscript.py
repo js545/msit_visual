@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import pingouin as pg
+import scikit_posthocs as sp
 import matplotlib.pyplot as plt
 
 pd.options.display.width = 0
@@ -125,6 +126,28 @@ pg.print_table(aovrm)
 
 aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df_hiv)
 pg.print_table(aovrm)
+
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Gamma/Gamma_Interaction_-26_-61_-43_age_regressed.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+# Gamma Interaction Timeseries
+
+filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_rel_timeseries_concat.csv'
+df = pd.read_csv(filename)
+df = df[(df['condition'] == 'Control') | (df['condition'] == 'Flanker') | (df['condition'] == 'Simon') | (df['condition'] == 'MultiSource')]
+
+aovrm = pg.friedman(dv='mean', within='condition', subject='ID', data=df, method='chisq')
+print(aovrm)
+sp.posthoc_conover(df, val_col='mean', group_col='condition', p_adjust='bonf')
 
 
 
