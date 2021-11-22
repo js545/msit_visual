@@ -3,6 +3,8 @@ import pandas as pd
 import pingouin as pg
 import matplotlib.pyplot as plt
 
+pd.options.display.width = 0
+
 # Compare RT in a mixed model ANOVA
 df = pd.read_csv('E:/Data/MSIT_MIND/group_RT_129_rmanova.csv')
 aovrm = pg.mixed_anova(dv='Response_Time', within='Condition', between='Group', subject='MIND_ID', data=df)
@@ -30,13 +32,99 @@ pg.ttest(flanker['Response_Time'].values, ms['Response_Time'].values, paired=Tru
 # Alpha Condition 2x4
 
 df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Alpha/Alpha_Condition_16_-12_61_Composite_age_regressed.csv')
-
 aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df)
-print(aovrm.round(3))
 pg.print_table(aovrm)
 ttest = pg.pairwise_ttests(dv='Pseudot_value', within='Condition', subject='ID', padjust='bonf', data=df)
-print(ttest[['A', 'B', 'p-corr']])
+print(ttest[['A', 'B', 'T', 'p-corr']])
 
-df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Alpha/Alpha_Condition_')
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Alpha/Alpha_Condition_-20_-35_68_Composite_age_regressed.csv')
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df)
+pg.print_table(aovrm)
+ttest = pg.pairwise_ttests(dv='Pseudot_value', within='Condition', subject='ID', padjust='bonf', data=df)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Alpha/Alpha_Condition_56_-32_41_Composite_age_regressed.csv')
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df)
+pg.print_table(aovrm)
+ttest = pg.pairwise_ttests(dv='Pseudot_value', within='Condition', subject='ID', padjust='bonf', data=df)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Alpha/Alpha_Interaction_-38_-8_-19_Composite_age_regressed.csv')
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df)
+pg.print_table(aovrm)
+
+
+########################################################################################################################
+# Alpha Interaction 2x4
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Alpha/Alpha_Interaction_-38_-8_-19_Composite_age_regressed.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='Pseudot_value', within='Condition', between='Group', subject='ID', padjust='bonf', data=df)
+print(ttest[['Contrast', 'Condition', 'A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Alpha/Alpha_Interaction_50_20_-4_Composite_age_regressed.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='Pseudot_value', within='Condition', between='Group', subject='ID', padjust='bonf', data=df)
+print(ttest[['Contrast', 'Condition', 'A', 'B', 'T', 'p-corr']])
+
+########################################################################################################################
+# Gamma Condition 2x4
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Gamma/Gamma_Condition_18_-89_-1_Composite_age_regressed.csv')
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df)
+pg.print_table(aovrm)
+ttest = pg.pairwise_ttests(dv='Pseudot_value', within='Condition', subject='ID', padjust='bonf', data=df)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Gamma/Gamma_Condition_-58_-17_38_Composite_age_regressed.csv')
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df)
+pg.print_table(aovrm)
+ttest = pg.pairwise_ttests(dv='Pseudot_value', within='Condition', subject='ID', padjust='bonf', data=df)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Gamma/Gamma_Condition_-29_-72_-49_Composite_age_regressed.csv')
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df)
+pg.print_table(aovrm)
+ttest = pg.pairwise_ttests(dv='Pseudot_value', within='Condition', subject='ID', padjust='bonf', data=df)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Gamma/Gamma_Condition_-58_-17_38_Composite.csv')
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df)
+pg.print_table(aovrm)
+ttest = pg.pairwise_ttests(dv='Pseudot_value', within='Condition', subject='ID', padjust='bonf', data=df)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+########################################################################################################################
+# Gamma Interaction 2x4
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Gamma/Gamma_Interaction_-14_-16_-34_Composite_age_regressed.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='Pseudot_value', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
 
 
