@@ -33,6 +33,16 @@ rt_ms = subset(rt_ms, rt_ms$Response_Time < rt_mean + 2.5 * rt_stdv)
 
 # Response Time Normality by Group and Condition
 
+shapiro.test(rt_cont[which(rt_cont$Group == 'Control'),]$Response_Time)
+shapiro.test(rt_cont[which(rt_cont$Group == 'HIV'),]$Response_Time)
+shapiro.test(rt_simon[which(rt_simon$Group == 'Control'),]$Response_Time)
+shapiro.test(rt_simon[which(rt_simon$Group == 'HIV'),]$Response_Time)
+shapiro.test(rt_flan[which(rt_flan$Group == 'Control'),]$Response_Time)
+shapiro.test(rt_flan[which(rt_flan$Group == 'HIV'),]$Response_Time)
+shapiro.test(rt_ms[which(rt_ms$Group == 'Control'),]$Response_Time)
+shapiro.test(rt_ms[which(rt_ms$Group == 'HIV'),]$Response_Time)
+
+
 shapiro.test(rt_cont$Response_Time)
 shapiro.test(rt_simon$Response_Time)
 shapiro.test(rt_flan$Response_Time)
@@ -133,6 +143,22 @@ ggboxplot(rt_df, x='Group', y='Response_Time', color='Condition')
 dev.off()
 
 #############################################################################################
+# Alpha by Condition 2x4
+
+df = read.csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Alpha/Alpha_Condition_16_-12_61_Composite_age_regressed.csv')
+
+df$Condition <- factor(df$Condition, 
+                       levels = c('Control', 'Simon', 'Flanker', 'MultiSource'),
+                       labels = c('Control', 'Simon', 'Flanker', 'MultiSource'))
+ggboxplot(df, x='Condition', y='Pseudot_value')
+
+
+
+
+
+
+
+
 
 
 

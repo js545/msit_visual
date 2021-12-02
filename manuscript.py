@@ -12,6 +12,16 @@ aovrm = pg.mixed_anova(dv='Response_Time', within='Condition', between='Group', 
 print(aovrm.round(3))
 pg.print_table(aovrm)
 
+# Superadditive Test
+
+df = pd.read_csv('E:/Data/MSIT_MIND/group_RT_129_modified_interference.csv')
+aovrm = pg.mixed_anova(dv='Response_Time', within='Condition', between='Group', subject='MIND_ID', data=df)
+pg.print_table(aovrm)
+
+df = df[df['Group'] == 'Control']
+aovrm = pg.rm_anova(dv='Response_Time', within='Condition', subject='MIND_ID', data=df)
+pg.print_table(aovrm)
+
 # Post hoc paired t-test
 df = pd.read_csv('E:/Data/MSIT_MIND/group_RT_129_rmanova.csv')
 df = df[df['Group'] == 'HIV']
@@ -142,12 +152,51 @@ pg.print_table(aovrm)
 # Gamma Interaction Timeseries
 
 filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_rel_timeseries_concat.csv'
+filename = 'E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_rel_timeseries_concat.csv'
+
 df = pd.read_csv(filename)
 df = df[(df['condition'] == 'Control') | (df['condition'] == 'Flanker') | (df['condition'] == 'Simon') | (df['condition'] == 'MultiSource')]
 
 aovrm = pg.friedman(dv='mean', within='condition', subject='ID', data=df, method='chisq')
 print(aovrm)
-sp.posthoc_conover(df, val_col='mean', group_col='condition', p_adjust='bonf')
+posthoc = sp.posthoc_conover(df, val_col='mean', group_col='condition', p_adjust='bonf')
+print(posthoc)
+
+########################################################################################################################
+# Alpha Interaction 2x3
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Subtraction_Maps_v2/alpha_interaction_subtraction_maps_-39_-8_-19.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='Pseudo-t_value', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='Pseudo-t_value', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='Pseudo-t_value', within='Condition', subject='ID', padjust='bonf', data=df_control)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Subtraction_Maps_v2/alpha_interaction_subtraction_maps_-39_-8_-19.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='Pseudo-t_value', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='Pseudo-t_value', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+
+
+
+
+
+
+
 
 
 
