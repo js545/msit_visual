@@ -165,30 +165,147 @@ print(posthoc)
 ########################################################################################################################
 # Alpha Interaction 2x3
 
-df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Subtraction_Maps_v2/alpha_interaction_subtraction_maps_-39_-8_-19.csv')
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x3Interaction/Alpha_2x3Interaction_-38_-8_-19.csv')
 
 df_control = df[df['Group'] == 'Control']
 df_hiv = df[df['Group'] == 'HIV']
 
-aovrm = pg.rm_anova(dv='Pseudo-t_value', within='Condition', subject='ID', data=df_control)
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_control)
 pg.print_table(aovrm)
 
-aovrm = pg.rm_anova(dv='Pseudo-t_value', within='Condition', subject='ID', data=df_hiv)
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_hiv)
 pg.print_table(aovrm)
 
-ttest = pg.pairwise_ttests(dv='Pseudo-t_value', within='Condition', subject='ID', padjust='bonf', data=df_control)
+ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df_control)
 print(ttest[['A', 'B', 'T', 'p-corr']])
 
-df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Subtraction_Maps_v2/alpha_interaction_subtraction_maps_-39_-8_-19.csv')
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x3Interaction/Alpha_2x3Interaction_61_-51_-17.csv')
 
 df_control = df[df['Group'] == 'Control']
 df_hiv = df[df['Group'] == 'HIV']
 
-aovrm = pg.rm_anova(dv='Pseudo-t_value', within='Condition', subject='ID', data=df_control)
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_control)
 pg.print_table(aovrm)
 
-aovrm = pg.rm_anova(dv='Pseudo-t_value', within='Condition', subject='ID', data=df_hiv)
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_hiv)
 pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df_control)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x3Interaction/Alpha_2x3Interaction_50_20_-7.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df_control)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x3Interaction/Alpha_2x3Interaction_28_-14_64.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df_hiv)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x3Interaction/Alpha_2x3Interaction_22_-85_23.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df_control)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x3Interaction/Alpha_2x3Interaction_-45_-75_-14.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df_hiv)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+########################################################################################################################
+# Alpha Interaction 2x2 Addivite vs. MultiSource
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x2Interaction/Alpha_2x2Interaction_50_20_-4.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x2Interaction/Alpha_2x2Interaction_-18_-26_-43.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df)
+print(ttest[['A', 'B', 'T', 'p-corr']])
+
+
+########################################################################################################################
+# Grand Average Pseudo-t Differences
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Grand_Average/alpha_-30_-76_5_subtraction.csv')
+
+aovrm = pg.mixed_anova(dv='pseudo_tvalue', within='Condition', between='Group', subject='ID', data=df)
+pg.print_table(aovrm)
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Grand_Average/alpha_34_-76_9_subtraction.csv')
+
+aovrm = pg.mixed_anova(dv='pseudo_tvalue', within='Condition', between='Group', subject='ID', data=df)
+pg.print_table(aovrm)
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Grand_Average/gamma_-14_-88_5.csv')
+
+aovrm = pg.mixed_anova(dv='pseudo_tvalue', within='Condition', between='Group', subject='ID', data=df)
+pg.print_table(aovrm)
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Grand_Average/gamma_30_-88_9.csv')
+
+aovrm = pg.mixed_anova(dv='pseudo_tvalue', within='Condition', between='Group', subject='ID', data=df)
+pg.print_table(aovrm)
+
+# Grand Average Pseudo-t from Timeseries Differences
+
 
 
 
