@@ -250,7 +250,7 @@ ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID',
 print(ttest[['A', 'B', 'T', 'p-corr']])
 
 ########################################################################################################################
-# Alpha Interaction 2x2 Addivite vs. MultiSource
+# Alpha Interaction 2x2 Additive vs. MultiSource
 
 df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x2Interaction/Alpha_2x2Interaction_50_20_-4.csv')
 
@@ -263,8 +263,8 @@ pg.print_table(aovrm)
 aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_hiv)
 pg.print_table(aovrm)
 
-ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df)
-print(ttest[['A', 'B', 'T', 'p-corr']])
+ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', alternative='less', data=df_hiv)
+print(ttest[['Contrast', 'A', 'B', 'T', 'p-unc']])
 
 df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x2Interaction/Alpha_2x2Interaction_-18_-26_-43.csv')
 
@@ -280,9 +280,25 @@ pg.print_table(aovrm)
 ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df)
 print(ttest[['A', 'B', 'T', 'p-corr']])
 
+########################################################################################################################
+# Alpha Interaction 2x3
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Manuscript_Alpha/2x3Interaction/Alpha_2x3Interaction_-38_-8_-19.csv')
+
+df_control = df[df['Group'] == 'Control']
+df_hiv = df[df['Group'] == 'HIV']
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_control)
+pg.print_table(aovrm)
+
+aovrm = pg.rm_anova(dv='pseudo_tvalue', within='Condition', subject='ID', data=df_hiv)
+pg.print_table(aovrm)
+
+ttest = pg.pairwise_ttests(dv='pseudo_tvalue', within='Condition', subject='ID', padjust='bonf', data=df_control)
+print(ttest[['A', 'B', 'T', 'p-corr']])
 
 ########################################################################################################################
-# Grand Average Pseudo-t Differences
+# Grand Average from Pseudo-t Differences
 
 df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Grand_Average/alpha_-30_-76_5_subtraction.csv')
 
@@ -305,14 +321,57 @@ aovrm = pg.mixed_anova(dv='pseudo_tvalue', within='Condition', between='Group', 
 pg.print_table(aovrm)
 
 # Grand Average Pseudo-t from Timeseries Differences
+# SIGNIFICANT FINDINGS
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_-30_-76_5/timeseries/alpha_-30_-76_5_rel_timeseries_concat.csv')
+df = df[(df['condition'] == 'Simon_Control') | (df['condition'] == 'Flanker_Control') | (df['condition'] == 'MS_Control')]
+
+aovrm = pg.mixed_anova(dv='mean', within='condition', between='group', subject='ID', data=df)
+pg.print_table(aovrm)
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_34_-76_9/timeseries/alpha_34_-76_9_rel_timeseries_concat.csv')
+df = df[(df['condition'] == 'Simon_Control') | (df['condition'] == 'Flanker_Control') | (df['condition'] == 'MS_Control')]
+
+aovrm = pg.mixed_anova(dv='mean', within='condition', between='group', subject='ID', data=df)
+pg.print_table(aovrm)
 
 
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_-14_-88_5/timeseries/gamma_-14_-88_5_rel_timeseries_concat.csv')
+df = df[(df['condition'] == 'Simon_Control') | (df['condition'] == 'Flanker_Control') | (df['condition'] == 'MS_Control')]
 
+aovrm = pg.mixed_anova(dv='mean', within='condition', between='group', subject='ID', data=df)
+pg.print_table(aovrm)
 
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/gamma_30_-88_9/timeseries/gamma_30_-88_9_rel_timeseries_concat.csv')
+df = df[(df['condition'] == 'Simon_Control') | (df['condition'] == 'Flanker_Control') | (df['condition'] == 'MS_Control')]
 
+aovrm = pg.mixed_anova(dv='mean', within='condition', between='group', subject='ID', data=df)
+pg.print_table(aovrm)
 
+########################################################################################################################
+# Grand Average 2x2 Additive vs. MultiSource from Pseudo-t Differences
 
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Grand_Average/alpha_-30_-76_5_subtraction_2x2.csv')
 
+aovrm = pg.mixed_anova(dv='pseudo_tvalue', within='Condition', between='Group', subject='ID', data=df)
+pg.print_table(aovrm)
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/Extracted_Peaks/Grand_Average/alpha_34_-76_9_subtraction_2x2.csv')
+
+aovrm = pg.mixed_anova(dv='pseudo_tvalue', within='Condition', between='Group', subject='ID', data=df)
+pg.print_table(aovrm)
+
+# Grand Average 2x2 Additive vs. MultiSource from Timeseries Differences
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_-30_-76_5/timeseries/alpha_-30_-76_5_rel_timeseries_concat_2x2.csv')
+
+aovrm = pg.mixed_anova(dv='mean', within='condition', between='group', subject='ID', data=df)
+pg.print_table(aovrm)
+
+df = pd.read_csv('E:/Data/MSIT_MIND/VMPs/Visual_4mm/virutal_sensors/alpha_34_-76_9/timeseries/alpha_34_-76_9_rel_timeseries_concat_2x2.csv')
+
+aovrm = pg.mixed_anova(dv='mean', within='condition', between='group', subject='ID', data=df)
+pg.print_table(aovrm)
 
 
 
